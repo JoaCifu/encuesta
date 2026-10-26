@@ -48,4 +48,23 @@ venv.bak/
 
 # --- Sistema Operativo ---
 .DS_Store
+Thumbs.db# Base de datos y datos de personas
+db.sqlite3
+*.sqlite3
+*.sqlite3-journal
+*.csv
+*.xlsx
+media/
+
+# Archivos generados
+__pycache__/
+*.py[cod]
+staticfiles/
+*.log
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+.DS_Store
 Thumbs.db
+desktop.ini
