@@ -1,0 +1,134 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Encuesta{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'encuesta/img/logo.svg' %}">
+  <link rel="icon" type="image/png" href="{% static 'encuesta/img/favicon.png' %}">
+  <meta name="description" content="Encuesta de menos de 10 minutos sobre procesos, datos y desarrollo web.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Encuesta sobre procesos, datos y desarrollo web">
+  <meta property="og:description" content="Toma menos de 10 minutos. Tu opinión me ayuda a definir mejor mis servicios.">
+  <meta property="og:image" content="{% static 'encuesta/img/logo.png' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'encuesta/img/logo.svg' %}">
+  <link rel="icon" type="image/png" href="{% static 'encuesta/img/favicon.png' %}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Encuesta sobre procesos, datos y desarrollo web">
+  <meta property="og:description" content="Toma menos de 10 minutos. Tu opinión me ayuda a definir mejor mis servicios.">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'encuesta/img/logo.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --papel: #f5f6f8;
+      --tinta: #1c2430;
+      --tinta-suave: #5a6574;
+      --linea: #d3d9e1;
+      --acento: #171bdf;
+      --acento-fondo: #e9eafb;
+      --error: #a32a2a;
+      --superficie: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --papel: #14181e; --tinta: #e8ecf1; --tinta-suave: #9aa6b4;
+        --linea: #2d3642; --acento: #8f95ff; --acento-fondo: #1d2040;
+        --error: #ff8f8f; --superficie: #1a2028;
+      }
+    }
+    * { box-sizing: border-box; }
+    :root { --sobre-acento: #ffffff; }
+    @media (prefers-color-scheme: dark) { :root { --sobre-acento: #10122b; } }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--papel); color: var(--tinta);
+      font: 17px/1.55 "Source Sans 3", system-ui, sans-serif;
+    }
+    main { max-width: 40rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1, h2 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; line-height: 1.2; }
+    h1 { font-size: 2rem; margin: 0 0 1rem; }
+    h2 { font-size: 1.5rem; margin: 0 0 .25rem; }
+    p { margin: 0 0 1rem; }
+    .suave { color: var(--tinta-suave); }
+
+    .progreso { height: 4px; background: var(--linea); }
+    .progreso > div { height: 100%; background: var(--acento); transition: width .3s; }
+    .paso-info { font-size: .9rem; color: var(--tinta-suave); margin-bottom: 1.75rem; }
+
+    .pregunta { border: 0; padding: 0; margin: 0 0 2.25rem; min-width: 0; }
+    .pregunta legend { font-weight: 600; font-size: 1.08rem; padding: 0; margin-bottom: .25rem; }
+    .ayuda { color: var(--tinta-suave); font-size: .92rem; margin: 0 0 .6rem; }
+
+    .campo > div > div, .campo > div { display: block; }
+    .opciones label {
+      display: flex; gap: .65rem; align-items: flex-start;
+      padding: .6rem .8rem; margin-bottom: .4rem; cursor: pointer;
+      background: var(--superficie); border: 1px solid var(--linea); border-radius: 6px;
+    }
+    .opciones label:hover { border-color: var(--acento); }
+    .opciones label:has(input:checked) { background: var(--acento-fondo); border-color: var(--acento); }
+    .opciones input { margin-top: .35rem; accent-color: var(--acento); }
+
+    .fila { display: grid; grid-template-columns: 1fr auto; gap: .5rem 1rem; align-items: center;
+            padding: .6rem 0; border-bottom: 1px solid var(--linea); }
+    .fila-etiqueta { font-size: .98rem; }
+    .escala > div { display: flex; gap: .35rem; }
+    .escala label { display: flex; margin: 0; padding: 0; }
+    .escala input { position: absolute; opacity: 0; }
+    .escala label span, .escala label { }
+    .escala label {
+      position: relative; width: 2.4rem; height: 2.4rem; align-items: center; justify-content: center;
+      background: var(--superficie); border: 1px solid var(--linea); border-radius: 6px; cursor: pointer;
+    }
+    .escala label:has(input:checked) { background: var(--acento); border-color: var(--acento); color: var(--sobre-acento); }
+    .escala label:has(input:focus-visible), select:focus-visible, input:focus-visible, textarea:focus-visible,
+    .boton:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+    @media (max-width: 30rem) { .fila { grid-template-columns: 1fr; } }
+
+    select, input[type=text], textarea {
+      width: 100%; font: inherit; color: inherit; padding: .55rem .7rem;
+      background: var(--superficie); border: 1px solid var(--linea); border-radius: 6px;
+    }
+    select { width: 5rem; }
+    textarea { resize: vertical; }
+    .contacto-extra { margin-top: .75rem; display: grid; gap: .6rem; }
+    .contacto-extra label { font-size: .92rem; color: var(--tinta-suave); display: block; margin-bottom: .2rem; }
+
+    .error { color: var(--error); font-size: .92rem; margin: .35rem 0 0; }
+    .errorlist { list-style: none; padding: 0; margin: .35rem 0 0; color: var(--error); font-size: .92rem; }
+
+    .acciones { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+    .boton {
+      font: inherit; font-weight: 600; cursor: pointer; padding: .7rem 1.5rem;
+      background: var(--acento); color: var(--sobre-acento); border: 0; border-radius: 6px;
+    }
+    .boton:hover { filter: brightness(1.1); }
+    .enlace { color: var(--tinta-suave); text-decoration: underline; }
+    .consentimiento { display: flex; gap: .65rem; margin: 1.5rem 0; align-items: flex-start; }
+    .consentimiento input { margin-top: .4rem; accent-color: var(--acento); }
+    @media (prefers-color-scheme: dark) {
+      .boton, .escala label:has(input:checked) { color: #10122e; }
+    }
+    .marca { display: inline-flex; align-items: center; gap: .6rem; color: var(--tinta); text-decoration: none; }
+    .marca img { height: 1.75rem; width: 1.75rem; display: block; }
+    .marca span { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; font-size: 1.1rem; }
+    .pie { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1.25rem 2.5rem; border-top: 1px solid var(--linea);
+           display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem 1.5rem; }
+    .pie .correo { font-size: .92rem; color: var(--tinta-suave); }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  {% block progreso %}{% endblock %}
+  <main>{% block contenido %}{% endblock %}</main>
+  <footer class="pie">
+    <a class="marca" href="https://eutek.cl" target="_blank" rel="noopener">
+      <img src="{% static 'encuesta/img/logo.svg' %}" alt="">
+      <span>Eutek</span>
+    </a>
+    <a class="correo" href="mailto:info@eutek.cl">info@eutek.cl</a>
+  </footer>
+</body>
+</html>

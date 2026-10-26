@@ -1,0 +1,70 @@
+{% extends "encuesta/base.html" %}
+{% block titulo %}{{ bloque.titulo }} · Encuesta{% endblock %}
+
+{% block progreso %}
+  <div class="progreso" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progreso }}">
+    <div style="width: {{ progreso }}%"></div>
+  </div>
+{% endblock %}
+
+{% block contenido %}
+  <p class="paso-info">Paso {{ posicion }} de {{ total }}</p>
+  <h2>{{ bloque.titulo }}</h2>
+  {% if bloque.descripcion %}<p class="suave">{{ bloque.descripcion }}</p>{% endif %}
+
+  <form method="post" novalidate style="margin-top: 1.75rem;">
+    {% csrf_token %}
+    {% for p, campos in form.grupos %}
+      <fieldset class="pregunta">
+        <legend>{{ p.texto }}</legend>
+        {% if p.ayuda %}<p class="ayuda">{{ p.ayuda }}</p>{% endif %}
+
+        {% if p.tipo == "matriz" %}
+          {% for c in campos %}
+            <div class="fila">
+              <span class="fila-etiqueta">{{ c.label }}</span>
+              <div class="escala campo">{{ c }}</div>
+              {{ c.errors }}
+            </div>
+          {% endfor %}
+
+        {% elif p.tipo == "ranking" %}
+          {% for c in campos %}
+            <div class="fila">
+              <label class="fila-etiqueta" for="{{ c.id_for_label }}">{{ c.label }}</label>
+              <div>{{ c }}</div>
+            </div>
+          {% endfor %}
+          {{ campos.0.errors }}
+
+        {% elif p.tipo == "escala" %}
+          <div class="escala campo">{{ campos.0 }}</div>
+          {{ campos.0.errors }}
+
+        {% elif p.tipo == "texto" %}
+          <div class="campo">{{ campos.0 }}</div>
+          {{ campos.0.errors }}
+
+        {% elif p.tipo == "contacto" %}
+          <div class="opciones campo">{{ campos.0 }}</div>
+          {{ campos.0.errors }}
+          <div class="contacto-extra">
+            <div><label for="{{ campos.1.id_for_label }}">{{ campos.1.label }} (si respondiste que sí)</label>{{ campos.1 }}</div>
+            <div><label for="{{ campos.2.id_for_label }}">{{ campos.2.label }}</label>{{ campos.2 }}{{ campos.2.errors }}</div>
+          </div>
+
+        {% else %}
+          <div class="opciones campo">{{ campos.0 }}</div>
+          {{ campos.0.errors }}
+        {% endif %}
+      </fieldset>
+    {% endfor %}
+
+    <div class="acciones">
+      {% if anterior %}
+        <a class="enlace" href="{% url 'encuesta:paso' anterior.orden %}?dir=atras">Volver</a>
+      {% else %}<span></span>{% endif %}
+      <button class="boton" type="submit">{% if es_ultimo %}Enviar respuestas{% else %}Continuar{% endif %}</button>
+    </div>
+  </form>
+{% endblock %}

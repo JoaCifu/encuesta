@@ -1,0 +1,17 @@
+{% extends "encuesta/base.html" %}
+{% block titulo %}Encuesta sobre servicios de procesos, datos y desarrollo web{% endblock %}
+{% block contenido %}
+  <h1>Ayúdame a afinar mi oferta de servicios</h1>
+  <p>Estoy definiendo mi oferta en procesos (diagramación BPM), ciencia de datos y aplicaciones web, y tu opinión me ayuda a hacerlo bien.</p>
+  <p>No es una venta y toma menos de 10 minutos. Las respuestas se usan solo de forma agregada y anónima. Tus datos de contacto son opcionales y solo los usaré si tú lo autorizas en la última pregunta.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <label class="consentimiento">
+      <input type="checkbox" name="consentimiento" required>
+      <span>Acepto que mis respuestas se utilicen de forma agregada y anónima para definir esta oferta de servicios.</span>
+    </label>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <button class="boton" type="submit">Empezar la encuesta</button>
+  </form>
+{% endblock %}
